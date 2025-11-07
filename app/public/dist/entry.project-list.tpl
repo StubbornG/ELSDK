@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="/static/normalize.css">
     <!-- inject:css -->
     <!-- endinject -->
-<script defer src="http://127.0.0.1:9002/public/dist/dev/js/vendors_4467e0c5.bundle.js"></script><script defer src="http://127.0.0.1:9002/public/dist/dev/js/common_b0f7f4ff.bundle.js"></script><script defer src="http://127.0.0.1:9002/public/dist/dev/js/entry.project-list_3d604f9b.bundle.js"></script></head>
+<script defer src="http://127.0.0.1:9002/public/dist/dev/js/vendors_398b917c.bundle.js"></script><script defer src="http://127.0.0.1:9002/public/dist/dev/js/common_e456e143.bundle.js"></script><script defer src="http://127.0.0.1:9002/public/dist/dev/js/entry.project-list_9d3d994b.bundle.js"></script></head>
 <body>
     <div id="root"></div>
     <input id="projKey" value="{{ projKey }}" style="display: none;"></input>

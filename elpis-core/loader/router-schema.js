@@ -22,17 +22,29 @@ const glob = require('glob');
 */
 
 module.exports = (app) => {
-    // 读取 app/router-schema/**/**.js下所有的文件 
-    const routerSchemaPath = path.resolve(app.businessPath, `.${sep}router-schema`);
-    const filterList = glob.sync(path.resolve(routerSchemaPath, `.${sep}**${sep}**.js`));
-    // 注册所有 routerSchema, 使得可以 app.routerSchema 访问
     let routerSchema = {};
-    filterList.forEach(file => {
-       routerSchema = {
-        ...routerSchema,
-        ...require(path.resolve(file))
-       }
-        
+
+    // 读取 elsdk/router-schema/**/**.js下所有的文件 
+    const elpisRouterSchemaPath = path.resolve(__dirname, `..${sep}..${sep}app${sep}router-schema`);
+    const elpisFilterList = glob.sync(path.resolve(elpisRouterSchemaPath, `.${sep}**${sep}**.js`));
+    elpisFilterList.forEach(file => {
+        handleFile(file)
     })
+
+    // 读取 业务/router-schema/**/**.js下所有的文件 
+    const businessRouterSchemaPath = path.resolve(app.businessPath, `.${sep}router-schema`);
+    const businessFilterList = glob.sync(path.resolve(businessRouterSchemaPath, `.${sep}**${sep}**.js`));
+    businessFilterList.forEach(file => {
+        handleFile(file)
+    })
+
+    // 注册所有 routerSchema, 使得可以 app.routerSchema 访问
+    function handleFile(file) {
+        routerSchema = {
+            ...routerSchema,
+            ...require(path.resolve(file))
+        }
+             
+    }
     app.routerSchema = routerSchema;
 }

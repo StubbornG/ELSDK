@@ -15,12 +15,22 @@ const glob = require('glob');
 */
 
 module.exports = (app) => {
-    // 读取 app/extend/**.js  下所有的文件
-    const extendPath = path.resolve(app.businessPath, `.${sep}extend`)
-    const fileList = glob.sync(path.resolve(extendPath,  `.${sep}**.js`))
-    // 遍历所有的文件目录， 把内容加载到 app.extend 下
-    const extend = {}
-    fileList.forEach(file => {
+    // 读取 elpis/extend/**.js  下所有的文件
+    const elpisExtendPath = path.resolve(__dirname, `..${sep}..${sep}app${sep}extend`)
+    const elpisFileList = glob.sync(path.resolve(elpisExtendPath,  `.${sep}**.js`))
+    elpisFileList.forEach(file => {
+        handleFile(file)
+    })
+    
+    // 读取 业务/extend/**.js  下所有的文件
+    const businessExtendPath = path.resolve(app.businessPath, `.${sep}extend`)
+    const businessFileList = glob.sync(path.resolve(businessExtendPath,  `.${sep}**.js`))
+    businessFileList.forEach(file => {
+        handleFile(file)
+    })
+
+    // 把内容加载到 app.extend 下
+    function handleFile(file) {
         // 提取文件名
         let name = path.resolve(file);
 
@@ -40,5 +50,5 @@ module.exports = (app) => {
         
         // 把 extend 挂载到 app 上
         app[name] = require(path.resolve(file))(app)
-    })
+    }
 }

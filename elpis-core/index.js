@@ -54,12 +54,19 @@ module.exports = {
         // 加载extend
         extendLoader(app)
         console.log('extendLoader done --');
-        // 注册全局中间件
+
+        // 注册elpis全局中间件
+        const elpisMiddlewarePath = path.resolve(__dirname, `..${sep}app${sep}middleware.js`);
+        const elpisMiddleware = require(elpisMiddlewarePath);
+        elpisMiddleware(app);
+        console.log('--- [start] load glob elpis midddleware file')
+
+        // 注册业务全局中间件
         try {
             require(`${app.businessPath}${sep}middleware.js`)(app);
-            console.log('--- [start] load glob midddleware file')
+            console.log('--- [start] load glob business midddleware file')
         } catch(e) {
-            console.log('{exception} there is not glob midlleware file')
+            console.log('{exception} there is not glob business midlleware file')
         }
         // 注册路由
         routerLoader(app)

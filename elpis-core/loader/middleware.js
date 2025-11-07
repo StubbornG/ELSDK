@@ -18,12 +18,24 @@ const {sep} = path;
  * => app.middleware.customerModule.customerMiddleware
  * */ 
 module.exports = (app) => {
-    // 读取app/middleware/**/**.js下所有的文件
-    const  middlewarePath = path.resolve(app.businessPath, `.${sep}middleware`)
-    const fileList = glob.sync(path.resolve(middlewarePath, `.${sep}**${sep}**.js`));
-    // 遍历所有文件目录，把内容加载到 app.middleware 下
     const middlewares = {};
-    fileList.forEach(file => {
+
+    // 读取/elsdk/app/middleware/**/**.js下所有的文件
+    const elpisMiddlewarePath = path.resolve(__dirname, `..${sep}..${sep}app${sep}middleware`)
+    const elpisFileList = glob.sync(path.resolve(elpisMiddlewarePath, `.${sep}**${sep}**.js`));
+    elpisFileList.forEach(file => {
+        handleFile(file)
+    })
+
+    // 读取 业务根目录/app/middleware/**/**.js下所有的文件
+    const businessMiddlewarePath = path.resolve(app.businessPath, `.${sep}middleware`)
+    const businessFileList = glob.sync(path.resolve(businessMiddlewarePath, `.${sep}**${sep}**.js`));
+    businessFileList.forEach(file => {
+        handleFile(file)
+    })
+
+    // 把内容加载到 app.middleware 下
+    function handleFile(file) {
         // 提取文件名称
         let name = path.resolve(file);
 
@@ -47,6 +59,6 @@ module.exports = (app) => {
                 tempMiddleware = tempMiddleware[names[i]]
             }
         }
-    })
+    }
     app.middlewares = middlewares 
 }

@@ -17,13 +17,24 @@ const glob = require('glob');
 */
 
 module.exports = (app) => {
-    // 读取 app/service/**/**.js  下所有的文件.
-    const middlewarePath = path.resolve(app.businessPath, `.${sep}service`)
-    const fileList = glob.sync(path.resolve(middlewarePath, `.${sep}**${sep}**.js`))
+    const service = {};
 
-    // 遍历所有的文件目录， 把内容加载到 app.service 下
-    const service = {}
-    fileList.forEach(file => {
+     // 读取 elpis/service/**/**.js  下所有的文件.
+     const elpisMiddlewarePath = path.resolve(__dirname, `..${sep}..${sep}app${sep}service`)
+     const elpisFileList = glob.sync(path.resolve(elpisMiddlewarePath, `.${sep}**${sep}**.js`))
+     elpisFileList.forEach(file => {
+        handleFile(file)
+     })
+
+    // 读取 业务/service/**/**.js  下所有的文件.
+    const businessMiddlewarePath = path.resolve(app.businessPath, `.${sep}service`)
+    const businessFileList = glob.sync(path.resolve(businessMiddlewarePath, `.${sep}**${sep}**.js`))
+    businessFileList.forEach(file => {
+        handleFile(file)
+     })
+
+    // 把内容加载到 app.service 下
+    function handleFile(file) {
         // 提取文件名
         let name = path.resolve(file);
 
@@ -49,6 +60,6 @@ module.exports = (app) => {
                 tempService = tempService[names[i]]
             }
         }
-    })
+    }
     app.service = service
 }
