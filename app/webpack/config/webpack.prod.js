@@ -26,7 +26,7 @@ const webpackConfig = mrege(baseConfig, {
                 test: /\.css$/,
                 use: [
                     MiniCssExtractPlugin.loader,
-                    'css-loader'
+                    require.resolve('css-loader')
                 ],
             },
             {
@@ -34,21 +34,21 @@ const webpackConfig = mrege(baseConfig, {
                 exclude: /\.vue$/,
                 use: [
                     MiniCssExtractPlugin.loader,
-                    'css-loader',
-                    'less-loader'
+                    require.resolve('css-loader'),
+                    require.resolve('less-loader')
                 ],
             },
             {
                 test: /\.js$/,
                 include: [
-                    path.resolve(process.cwd(), './app/pages')
+                    path.resolve(__dirname, '../../pages')
                 ],
                 use: {
-                    loader: 'babel-loader',
+                    loader: require.resolve('babel-loader'),
                     options: {
                         presets: [
                             [
-                                '@babel/preset-env',
+                                require.resolve('@babel/preset-env'),
                                 {
                                     targets: {
                                         browsers: ['> 1%', 'last 2 versions']
@@ -56,7 +56,7 @@ const webpackConfig = mrege(baseConfig, {
                                 }
                             ]
                         ],
-                        plugins: ['@babel/plugin-transform-runtime']
+                        plugins: [require.resolve('@babel/plugin-transform-runtime')]
                     }
                 }
             },

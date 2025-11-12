@@ -9,18 +9,19 @@ const glob = require('glob');
 //遍历获取./app/pages/ 目录下所有入口文件
 const pageEntry = {}
 const htmlWebpackPluginList = []
-const entryList = glob.sync(path.resolve(process.cwd(), './app/pages/**/entry.*.js'));
-entryList.forEach(file => {
+const entryList = path.resolve(__dirname, '../../pages/**/entry.*.js');
+glob.sync(entryList).forEach(file => {
     const entryName = path.basename(file, '.js');
     pageEntry[entryName] = file;
     htmlWebpackPluginList.push(new HtmlWebpackPlugin({
         // 入口文件模板文件
-        template: path.resolve(process.cwd(), './app/view/entry.tpl'),
+        template: path.resolve(__dirname, '../../view/entry.tpl'),
         // 输出文件
         filename: path.resolve(process.cwd(), './app/public/dist/' + entryName + '.tpl'),
         chunks: [entryName]
     }))
 });
+
 
 module.exports = {
     //入口配置
@@ -30,34 +31,34 @@ module.exports = {
         rules: [
             {
                 test: /\.vue$/,
-                use: 'vue-loader'
+                use: require.resolve('vue-loader')
             },
             {
                 test: /\.js$/,
                 include: [ // 修改为 include
-                    path.resolve(process.cwd(), './app/pages')
+                    path.resolve(__dirname, '../../pages')
                 ],
-                use: 'babel-loader',
+                use: require.resolve('babel-loader'),
             },
             {
                 test: /\.css$/,
                 use: [
-                    'style-loader',
-                    'css-loader'
+                    require.resolve('style-loader'),
+                    require.resolve('css-loader')
                 ]
             },
             {
                test: /\.less$/,
                use: [
-                   'style-loader',
-                   'css-loader',
-                   'less-loader'
+                require.resolve('style-loader'),
+                require.resolve('css-loader'),
+                require.resolve('less-loader')
                ]
             },
             {
                test: /\.(png|jpg|gif|svg)(\?.+)?$/,
                use: {
-                loader:'url-loader',
+                loader: require.resolve('url-loader'),
                 options: {
                     limit: 300,
                     esModule: false, // 修改为 esModule
@@ -68,7 +69,7 @@ module.exports = {
             {
                 test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
                 use: {
-                    loader: 'file-loader'
+                    loader: require.resolve('file-loader')
                 }
             }
         ]
@@ -79,11 +80,10 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.vue', '.json', '.less', '.css'],
         alias: {
-            '$': path.resolve(process.cwd(), './app'),
-            '$pages': path.resolve(process.cwd(), './app/pages'),
-            '$common': path.resolve(process.cwd(), './app/pages/common'),
-            '$widgets': path.resolve(process.cwd(), './app/pages/widgets'),
-            '$store': path.resolve(process.cwd(), './app/pages/store'),
+            '$pages': path.resolve(__dirname, '../../pages'),
+            '$common': path.resolve(__dirname, '../../pages/common'),
+            '$widgets': path.resolve(__dirname, '../../pages/widgets'),
+            '$store': path.resolve(__dirname, '../../pages/store'),
         }
     },
     plugins: [
