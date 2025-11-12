@@ -41,7 +41,10 @@ const webpackConfig = mrege(baseConfig, {
             {
                 test: /\.js$/,
                 include: [
-                    path.resolve(__dirname, '../../pages')
+                    // 处理 elpis 目录
+                    path.resolve(__dirname, '../../pages'),
+                    // 处理 业务  目录
+                    path.resolve(process.cwd(), './app/pages')
                 ],
                 use: {
                     loader: require.resolve('babel-loader'),

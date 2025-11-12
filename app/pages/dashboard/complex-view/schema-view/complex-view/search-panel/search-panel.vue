@@ -9,7 +9,7 @@
 </template>
 <script setup>
 import { inject } from 'vue';
-import schemaSearchBar from '$widgets/scheme-search-bar/schema-search-bar.vue';
+import schemaSearchBar from '$elpisWidgets/scheme-search-bar/schema-search-bar.vue';
 const { searchSchema } = inject('schemaViewData');
 
 const emit = defineEmits(['search']);

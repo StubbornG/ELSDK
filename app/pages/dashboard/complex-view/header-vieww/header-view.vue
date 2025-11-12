@@ -50,10 +50,10 @@
 import { ref, watch, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router'
 import { ArrowDown } from '@element-plus/icons-vue';
-import HeaderContainer from '../../../widgets/header-container/header-container.vue';
+import HeaderContainer from '$elpisWidgets/header-container/header-container.vue';
 import SubMenu from './complex-view/sub-menu/sub-menu.vue';     
-import { useProjectStore } from '$store/project.js';
-import { useMenuStore } from '$store/menu.js';
+import { useProjectStore } from '$elpisStore/project.js';
+import { useMenuStore } from '$elpisStore/menu.js';
 const route = useRoute();
 console.log('Route object:', route)
 const projectStore = useProjectStore()

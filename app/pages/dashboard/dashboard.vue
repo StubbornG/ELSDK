@@ -12,9 +12,9 @@ import { ref, onMounted, computed, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import zhCn from 'element-plus/es/locale/lang/zh-cn';
 import HeaderView from './complex-view/header-vieww/header-view.vue';
-import $curl from '$common/curl.js';
-import { useProjectStore } from '$store/project.js';
-import { useMenuStore } from '$store/menu.js';
+import $curl from '$elpisCommon/curl.js';
+import { useProjectStore } from '$elpisStore/project.js';
+import { useMenuStore } from '$elpisStore/menu.js';
 
 const router = useRouter();
 const route = useRoute();

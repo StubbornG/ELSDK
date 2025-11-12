@@ -1,18 +1,35 @@
 const path = require("path");
 const webpack = require("webpack");
+const merge = require('webpack-merge'); // 修正拼写错误：mrege -> merge
 const { VueLoaderPlugin } = require('vue-loader');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const glob = require('glob');
 /**
  * webpack基础配置
  */
-//遍历获取./app/pages/ 目录下所有入口文件
-const pageEntry = {}
-const htmlWebpackPluginList = []
-const entryList = path.resolve(__dirname, '../../pages/**/entry.*.js');
-glob.sync(entryList).forEach(file => {
+// 动态构造 elpisPageEntry 和 elpisHtmlWebpackPluginList
+const elpisPageEntry = {}
+const elpisHtmlWebpackPluginList = []
+//遍历获取 elpis/app/pages/ 目录下所有入口文件
+const elpisEntryList = path.resolve(__dirname, '../../pages/**/entry.*.js');
+glob.sync(elpisEntryList).forEach(file => {
+    handleFile(file, elpisPageEntry, elpisHtmlWebpackPluginList);
+});
+
+// 动态构造 businessPageEntry 和 businessHtmlWebpackPluginList
+const businessPageEntry = {}
+const businessHtmlWebpackPluginList = []
+//遍历获取 business/app/pages/ 目录下所有入口文件
+const businessEntryList = path.resolve(process.cwd(), './app/pages/**/entry.*.js');
+glob.sync(businessEntryList).forEach(file => {
+    handleFile(file, businessPageEntry, businessHtmlWebpackPluginList);
+});
+
+
+// 构造相关的 webpack 处理数据结构
+function handleFile(file, entries = {}, htmlWebpackPluginList = []) {
     const entryName = path.basename(file, '.js');
-    pageEntry[entryName] = file;
+    entries[entryName] = file;
     htmlWebpackPluginList.push(new HtmlWebpackPlugin({
         // 入口文件模板文件
         template: path.resolve(__dirname, '../../view/entry.tpl'),
@@ -20,12 +37,19 @@ glob.sync(entryList).forEach(file => {
         filename: path.resolve(process.cwd(), './app/public/dist/' + entryName + '.tpl'),
         chunks: [entryName]
     }))
-});
+}
+
+// 加载业务 webpack 配置
+let bussinessWebpackConfig = {};
+try {
+    bussinessWebpackConfig = require(`${process.cwd()}/app/webpack.config.js`);
+} catch (e) {
+    console.log('未找到业务webpack配置文件，使用默认配置');}
 
 
-module.exports = {
+module.exports = merge.smart({
     //入口配置
-    entry: pageEntry,
+    entry: Object.assign({},elpisPageEntry, businessPageEntry),
     //模块配置
     module: {
         rules: [
@@ -36,7 +60,10 @@ module.exports = {
             {
                 test: /\.js$/,
                 include: [ // 修改为 include
-                    path.resolve(__dirname, '../../pages')
+                    // 处理 elpis 目录
+                    path.resolve(__dirname, '../../pages'),
+                    // 处理 业务  目录
+                    path.resolve(process.cwd(), './app/pages')
                 ],
                 use: require.resolve('babel-loader'),
             },
@@ -80,10 +107,21 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.vue', '.json', '.less', '.css'],
         alias: {
-            '$pages': path.resolve(__dirname, '../../pages'),
-            '$common': path.resolve(__dirname, '../../pages/common'),
-            '$widgets': path.resolve(__dirname, '../../pages/widgets'),
-            '$store': path.resolve(__dirname, '../../pages/store'),
+            'vue': require.resolve('vue'),
+            '@babel/runtime/helpers/asyncToGenerator': require.resolve('@babel/runtime/helpers/asyncToGenerator'),
+            '@babel/runtime/regenerator': require.resolve('@babel/runtime/regenerator'),
+            '$elpisPages': path.resolve(__dirname, '../../pages'),
+            '$elpisCommon': path.resolve(__dirname, '../../pages/common'),
+            '$elpisCurl': path.resolve(__dirname, '../../pages/common/curl.js'),
+            '$elpisUtils': path.resolve(__dirname, '../../pages/common/utils.js'),
+            '$elpisWidgets': path.resolve(__dirname, '../../pages/widgets'),
+            '$elpisHeaderContainer': path.resolve(__dirname, '../../pages/widgets/header-container/header-container.vue'),
+            '$elpisSiderContainer': path.resolve(__dirname, '../../pages/widgets/sider-container/sider-container.vue'),
+            '$elpisSchemaTable': path.resolve(__dirname, '../../pages/widgets/schema-table/schema-table.vue'),
+            '$elpisSchemaForm': path.resolve(__dirname, '../../pages/widgets/schema-form/schema-form.vue'),
+            '$elpisSchemaSearchBar': path.resolve(__dirname, '../../pages/widgets/scheme-search-bar/scheme-search-bar.vue'),
+            '$elpisStore': path.resolve(__dirname, '../../pages/store'),
+            '$elpisBoot': path.resolve(__dirname, '../../pages/boot.js'),
         }
     },
     plugins: [
@@ -101,7 +139,8 @@ module.exports = {
         //     filename: path.resolve(process.cwd(), './app/public/dist/entry.page1.tpl'),
         //     chunks: ['entry.page1']
         // }),
-        ...htmlWebpackPluginList,
+        ...elpisHtmlWebpackPluginList,
+        ...businessHtmlWebpackPluginList,
         // 定义全局常量
         new webpack.DefinePlugin({
             __VUE_OPTIONS_API__: true, // 是否支持vue3解析 optionsApi
@@ -135,4 +174,4 @@ module.exports = {
             }
         }
     }
-}
+}, bussinessWebpackConfig)
