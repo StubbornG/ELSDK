@@ -18,7 +18,6 @@ const ElpisCore = require('./elpis-core');
 // 引入 前端工程化构建方法
 const FEBuildDev = require('./app/webpack/dev.js')
 const FEBuildProd = require('./app/webpack/prod.js');
-const controller = require('./elpis-core/loader/controller.js');
 
 module.exports = {
     /**
