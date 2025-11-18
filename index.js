@@ -25,7 +25,7 @@ module.exports = {
      * 服务端基础
      * 
      * */
-    controller: {
+    Controller: {
         Base: require('./app/controller/base.js')
     },
     Service: {
