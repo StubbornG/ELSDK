@@ -17,9 +17,21 @@ const ElpisCore = require('./elpis-core');
 
 // 引入 前端工程化构建方法
 const FEBuildDev = require('./app/webpack/dev.js')
-const FEBuildProd = require('./app/webpack/prod.js')
+const FEBuildProd = require('./app/webpack/prod.js');
+const controller = require('./elpis-core/loader/controller.js');
 
 module.exports = {
+    /**
+     * 服务端基础
+     * 
+     * */
+    controller: {
+        Base: require('./app/controller/base.js')
+    },
+    Service: {
+        Base: require('./app/service/base.js')
+    },
+
     /**
      * 编译构建前端工程
      * @params env 环境变量 dev/prod

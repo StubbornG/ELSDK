@@ -3,6 +3,9 @@ import select from './complex-view/select/select.vue';
 import dynamicSelect from './complex-view/dynamic-select/dynamic-select.vue';
 import dateRange from './complex-view/date-range/date-range.vue';
 
+// 业务扩展 search-item 配置
+import BusinessSearchItemConfig from '$businessSearchItemConfig';
+
 const SchemaItemConfig = {
     input: {
         component: input,
@@ -18,4 +21,7 @@ const SchemaItemConfig = {
     }
 }
 
-export default SchemaItemConfig;
+export default {
+    ...SchemaItemConfig,
+   ...BusinessSearchItemConfig
+};
