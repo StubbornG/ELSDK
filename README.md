@@ -188,4 +188,12 @@ frontenBuild(process.env._ENV);
 1. 在 `app/widgets/schema-search-bar/complex-view` 下写控件
 2.配置到 `app/widgets/schema-search-bar/search-item-config.js`
 
+#### 发布npm
+```javascript
+npm config get registry 检查是否https://registry.npmjs.org/
+npm config set registry  设置
+npm login 登录npm账号 
+npm publish --access public 发布
 
+每次改动都需要更改版本号
+```
